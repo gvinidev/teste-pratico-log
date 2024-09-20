@@ -1,0 +1,43 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://xmlns.jcp.org/jsf/html" 
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	template="template.xhtml">
+
+	<ui:define name="content">
+			<p:panel id="solicitanteForm" header="Cadastro de Solicitante" style="width: 700px; margin-bottom: 20px;">
+
+				<p:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel for="nome" value="Nome *: " />
+					<p:inputText id="nome" value="#{solicitanteController.entity.nome}" required="true" requiredMessage="Nome é obrigatório" />
+				</p:panelGrid>
+
+				<p:commandButton value="Cadastrar" action="#{solicitanteController.cadastrar}" update="solicitanteForm messages"
+								 icon="pi pi-check" />
+			</p:panel>
+
+		<p:separator />
+
+		<p:panel header="Solicitantes">
+			<p:dataTable id="solicitantesTable" value="#{solicitanteController.solicitantesCadastrados}" var="solicitante" style="width:100%" emptyMessage="Nenhum solicitante cadastrado.">
+				<p:column headerText="Solicitante">
+					<h:outputText value="#{solicitante.nome}" />
+				</p:column>
+
+				<p:column headerText="Excluir">
+					<p:commandButton value="Excluir" actionListener="#{solicitanteController.excluir(solicitante.id)}"
+									 update="@form" process="@this" icon="pi pi-pencil" />
+				</p:column>
+			</p:dataTable>
+
+			<p:separator/>
+
+			<p:commandButton value="Consultar" actionListener="#{solicitanteController.consultar}" update="solicitantesTable" process="@this" icon="pi pi-search"/>
+		</p:panel>
+
+		<p:growl id="messages" showDetail="true" life="3000" />
+	</ui:define>
+	
+</ui:composition>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>Teste Prático</title>
+    <h:outputStylesheet name="primefaces-arya/theme.css" />
+</h:head>
+<h:body>
+    <h:form>
+        <p:sidebar position="left" styleClass="custom-sidebar" visible="true" modal="false">
+            <p:menu>
+                <p:menuitem value="Vagas" outcome="/vagas.xhtml" />
+                <p:menuitem value="Solicitantes" outcome="/solicitantes.xhtml" />
+                <p:menuitem value="Agendamentos" outcome="/agendamentos.xhtml" />
+            </p:menu>
+        </p:sidebar>
+
+        <div class="main-content">
+            <ui:insert name="content" />
+        </div>
+    </h:form>
+
+    <style>
+        .main-content {
+            margin-left: 220px;
+            padding: 20px;
+        }
+        .custom-sidebar {
+            width: 200px;
+        }
+    </style>
+</h:body>
+</html>

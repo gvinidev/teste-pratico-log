@@ -2,7 +2,6 @@ package com.teste.pratico.web.controller;
 
 import com.teste.pratico.model.entity.Agendamento;
 import com.teste.pratico.model.entity.Solicitante;
-import com.teste.pratico.model.exception.VagasIndisponiveisException;
 import com.teste.pratico.web.client.AgendamentoClient;
 import com.teste.pratico.web.client.SolicitanteClient;
 import lombok.Data;
@@ -26,34 +25,26 @@ public class AgendamentoController implements Serializable, InitializingBean {
     @Serial
     private static final long serialVersionUID = 3249890867326927615L;
 
-    private Agendamento entity;
+    private Agendamento entity = new Agendamento();
+    private Agendamento filterEntity = new Agendamento();
 
-    private Agendamento filterEntity;
-
-    private AgendamentoClient client;
-
-    private SolicitanteClient solicitanteClient;
+    private AgendamentoClient client = new AgendamentoClient();
+    private SolicitanteClient solicitanteClient = new SolicitanteClient();
 
     private List<Agendamento> agendamentosCadastrados;
-
     private List<Solicitante> solicitantes;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        entity = new Agendamento();
-        filterEntity = new Agendamento();
-        client = new AgendamentoClient();
-        solicitanteClient = new SolicitanteClient();
-
+    public void afterPropertiesSet() {
         solicitantes = solicitanteClient.findAll();
     }
 
     public void cadastrar() {
         try {
             client.register(entity);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Agendamento cadastrado com sucesso"));
+            addMessage(FacesMessage.SEVERITY_INFO, "Agendamento cadastrado com sucesso");
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Warn", e.getMessage()));
+            addMessage(FacesMessage.SEVERITY_WARN, e.getMessage());
         }
     }
 
@@ -64,6 +55,10 @@ public class AgendamentoController implements Serializable, InitializingBean {
     public void excluir(Integer id) {
         client.delete(id);
         consultar();
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Agendamento deletado com sucesso"));
+        addMessage(FacesMessage.SEVERITY_INFO, "Agendamento deletado com sucesso");
+    }
+
+    private void addMessage(FacesMessage.Severity severity, String message) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, severity.getOrdinal() == FacesMessage.SEVERITY_INFO.getOrdinal() ? "Info" : "Warn", message));
     }
 }

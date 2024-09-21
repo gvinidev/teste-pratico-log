@@ -15,6 +15,9 @@ public interface VagasRepository extends JpaRepository<Vagas, Integer> {
     @Query("SELECT v FROM Vagas v WHERE :dataAgendamento BETWEEN v.inicio AND v.fim")
     List<Vagas> findVagasByPeriodo(@Param("dataAgendamento") Date dataAgendamento);
 
+    @Query("SELECT v FROM Vagas v WHERE (v.inicio < :fim) AND (v.fim > :inicio)")
+    List<Vagas> findVagasByInicioAndFim(@Param("inicio") Date inicio, @Param("fim") Date fim);
+
     @Query("SELECT v.quantidade FROM Vagas v WHERE v.inicio <= :data AND v.fim >= :data")
     Integer findQuantidadeVagasDisponiveis(@Param("data") Date data);
 }

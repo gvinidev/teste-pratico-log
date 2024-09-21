@@ -27,7 +27,7 @@ public class AgendamentoRestController {
         return service.findAll(filterEntity);
     }
 
-    @PutMapping(value = "{id}")
+    @DeleteMapping(value = "{id}")
     public void delete(@PathVariable Integer id) {
         service.delete(id);
     }

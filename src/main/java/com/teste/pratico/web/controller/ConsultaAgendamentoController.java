@@ -25,30 +25,19 @@ public class ConsultaAgendamentoController implements Serializable, Initializing
     @Serial
     private static final long serialVersionUID = -1124935823785480547L;
 
-    private ConsultaAgendamentoDTO entity;
+    private ConsultaAgendamentoDTO entity = new ConsultaAgendamentoDTO();
+    private ConsultaAgendamentoDTO filterEntity = new ConsultaAgendamentoDTO();
 
-    private ConsultaAgendamentoDTO filterEntity;
-
-    private ConsultaAgendamentoClient client;
-
-    private SolicitanteClient solicitanteClient;
-
-    private VagasClient vagasClient;
+    private final ConsultaAgendamentoClient client = new ConsultaAgendamentoClient();
+    private final SolicitanteClient solicitanteClient = new SolicitanteClient();
+    private final VagasClient vagasClient = new VagasClient();
 
     private List<ConsultaAgendamentoDTO> agendamentos;
-
     private List<Solicitante> solicitantes;
-
     private List<Vagas> vagas;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        entity = new ConsultaAgendamentoDTO();
-        filterEntity = new ConsultaAgendamentoDTO();
-        solicitanteClient = new SolicitanteClient();
-        vagasClient = new VagasClient();
-        client = new ConsultaAgendamentoClient();
-
+    public void afterPropertiesSet() {
         solicitantes = solicitanteClient.findAll();
         vagas = vagasClient.findAll();
     }

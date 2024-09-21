@@ -25,6 +25,6 @@ public class AgendamentoClient {
     }
 
     public void delete(Integer id) {
-        template.put(API_URL + "/agendamento/" + id, null, Void.class);
+        template.delete(API_URL + "/agendamento/" + id, null, Void.class);
     }
 }

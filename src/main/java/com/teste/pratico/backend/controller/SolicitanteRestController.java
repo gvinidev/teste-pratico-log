@@ -26,7 +26,7 @@ public class SolicitanteRestController {
         return service.findAll();
     }
 
-    @PutMapping(value = "{id}")
+    @DeleteMapping(value = "{id}")
     public void delete(@PathVariable Integer id) {
         service.delete(id);
     }

@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Integer> {
 
-    @Query(value = "SELECT CAST(REPLACE(a.numero, '.00', '') AS INTEGER) FROM agendamento a WHERE a.data BETWEEN :inicio AND :fim", nativeQuery = true)
+    @Query(value = "SELECT SUM(CAST(REPLACE(a.numero, '.00', '') AS INTEGER)) FROM agendamento a WHERE a.data BETWEEN :inicio AND :fim", nativeQuery = true)
     Optional<Integer> numeroAgendamentoByDataBetween(@Param("inicio") Date inicio, @Param("fim") Date fim);
 
     @Query(value = "SELECT CAST(REPLACE(a.numero, '.00', '') AS INTEGER) FROM agendamento a WHERE a.solicitante_id = :solicitanteId" +

@@ -23,21 +23,19 @@ public class SolicitanteController implements Serializable, InitializingBean {
     @Serial
     private static final long serialVersionUID = 3249890867326927615L;
 
-    private Solicitante entity;
+    private Solicitante entity = new Solicitante();
 
-    private SolicitanteClient client;
+    private final SolicitanteClient client = new SolicitanteClient();
 
     private List<Solicitante> solicitantesCadastrados;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        entity = new Solicitante();
-        client = new SolicitanteClient();
+    public void afterPropertiesSet() {
     }
 
     public void cadastrar() {
         client.register(entity);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Solicitante cadastrado com sucesso"));
+        addMessage(FacesMessage.SEVERITY_INFO, "Solicitante cadastrado com sucesso");
     }
 
     public void consultar() {
@@ -47,6 +45,10 @@ public class SolicitanteController implements Serializable, InitializingBean {
     public void excluir(Integer id) {
         client.delete(id);
         consultar();
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Solicitante deletado com sucesso"));
+        addMessage(FacesMessage.SEVERITY_INFO, "Solicitante deletado com sucesso");
+    }
+
+    private void addMessage(FacesMessage.Severity severity, String message) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, severity.getOrdinal() == FacesMessage.SEVERITY_INFO.getOrdinal() ? "Info" : "Warn", message));
     }
 }

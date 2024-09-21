@@ -25,6 +25,6 @@ public class SolicitanteClient {
     }
 
     public void delete(Integer id) {
-        template.put(API_URL + "/solicitante/" + id, null, Void.class);
+        template.delete(API_URL + "/solicitante/" + id, null, Void.class);
     }
 }

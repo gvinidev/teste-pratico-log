@@ -1,95 +1,105 @@
 <ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	template="template.xhtml">
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        template="template.xhtml">
 
-	<ui:define name="content">
-		<p:panel id="agendamentoForm" header="Cadastro de agendamento" style="width: 700px; margin-bottom: 20px;">
-			<p:panelGrid columns="2" cellpadding="5">
-				<h:outputLabel for="inicio" value="Início *: " />
-				<p:calendar id="inicio" locale="pt_BR" value="#{agendamentoController.entity.data}" pattern="dd/MM/yyyy" required="true"
-							requiredMessage="Data de Início é obrigatória"
-                            mindate="today" showButtonPanel="true" />
+    <ui:define name="content">
+        <p:panel id="agendamentoForm" header="Cadastro de agendamento" style="width: 700px; margin-bottom: 20px;">
+            <p:panelGrid columns="2" cellpadding="5">
+                <h:outputLabel for="inicio" value="Início *: "/>
+                <p:calendar id="inicio" locale="pt_BR" value="#{agendamentoController.entity.data}" pattern="dd/MM/yyyy"
+                            required="true"
+                            requiredMessage="Data de Início é obrigatória"
+                            mindate="today" showButtonPanel="true"/>
 
-				<h:outputLabel for="numero" value="Número do Agendamento *: " />
-				<p:inputNumber id="numero" value="#{agendamentoController.entity.numero}" minValue="1" required="true"
-							   requiredMessage="Número do agendamento é obrigatório" />
+                <h:outputLabel for="numero" value="Número do Agendamento *: "/>
+                <p:inputNumber id="numero" value="#{agendamentoController.entity.numero}" minValue="1" required="true"
+                               requiredMessage="Número do agendamento é obrigatório"/>
 
-				<h:outputLabel for="motivo" value="Motivo *: " />
-				<p:inputText id="motivo" value="#{agendamentoController.entity.motivo}" required="true" requiredMessage="Motivo é obrigatório" />
+                <h:outputLabel for="motivo" value="Motivo *: "/>
+                <p:inputText id="motivo" value="#{agendamentoController.entity.motivo}" required="true"
+                             requiredMessage="Motivo é obrigatório"/>
 
-				<h:outputLabel for="solicitante" value="Solicitante *: " />
-				<p:selectOneMenu id="solicitante" value="#{agendamentoController.entity.solicitanteId}">
-					<f:selectItem itemLabel="" itemValue=""/>
-					<f:selectItems value="#{agendamentoController.solicitantes}" var="solicitante" itemLabel="#{solicitante.nome}" itemValue="#{solicitante.id}"/>
-				</p:selectOneMenu>
-			</p:panelGrid>
+                <h:outputLabel for="solicitante" value="Solicitante *: "/>
+                <p:selectOneMenu id="solicitante" value="#{agendamentoController.entity.solicitanteId}" required="true"
+                                 requiredMessage="Solicitante é obrigatório">
+                    <f:selectItem itemLabel="" itemValue=""/>
+                    <f:selectItems value="#{agendamentoController.solicitantes}" var="solicitante"
+                                   itemLabel="#{solicitante.nome}" itemValue="#{solicitante.id}"/>
+                </p:selectOneMenu>
+            </p:panelGrid>
 
-			<p:commandButton value="Cadastrar" actionListener="#{agendamentoController.cadastrar}" update="agendamentoForm messages"
-							 icon="pi pi-check" process="agendamentoForm" />
-		</p:panel>
+            <p:commandButton value="Cadastrar" actionListener="#{agendamentoController.cadastrar}"
+                             update="agendamentoForm messages"
+                             icon="pi pi-check" process="agendamentoForm"/>
+        </p:panel>
 
-		<p:separator />
+        <p:separator/>
 
-		<p:panel header="Agendamento Cadastrados">
+        <p:panel header="Agendamento Cadastrados">
 
-			<p:panel id="filterGrid">
-				<p:panelGrid>
-					<h:outputLabel for="inicioFilter" value="Início: " />
-					<p:calendar id="inicioFilter" value="#{agendamentoController.filterEntity.dataInicio}" pattern="dd/MM/yyyy" required="false"
-								mindate="today" showButtonPanel="true" />
-				</p:panelGrid>
+            <p:panel id="filterGrid">
+                <p:panelGrid>
+                    <h:outputLabel for="inicioFilter" value="Início: "/>
+                    <p:calendar id="inicioFilter" value="#{agendamentoController.filterEntity.dataInicio}"
+                                pattern="dd/MM/yyyy" required="false"
+                                mindate="today" showButtonPanel="true"/>
+                </p:panelGrid>
 
-				<p:panelGrid>
-					<h:outputLabel for="fimFilter" value="Fim: " />
-					<p:calendar id="fimFilter" value="#{agendamentoController.filterEntity.dataFim}" pattern="dd/MM/yyyy" required="false"
-								mindate="today" showButtonPanel="true" />
-				</p:panelGrid>
+                <p:panelGrid>
+                    <h:outputLabel for="fimFilter" value="Fim: "/>
+                    <p:calendar id="fimFilter" value="#{agendamentoController.filterEntity.dataFim}"
+                                pattern="dd/MM/yyyy" required="false"
+                                mindate="today" showButtonPanel="true"/>
+                </p:panelGrid>
 
-				<p:panelGrid>
-					<h:outputLabel for="solicitanteFilter" value="Solicitante: " />
-					<p:selectOneMenu id="solicitanteFilter" value="#{agendamentoController.filterEntity.solicitanteIdFilter}">
-						<f:selectItem itemLabel="" itemValue=""/>
-						<f:selectItems value="#{agendamentoController.solicitantes}" var="solicitante" itemLabel="#{solicitante.nome}" itemValue="#{solicitante.id}"/>
-					</p:selectOneMenu>
-				</p:panelGrid>
-			</p:panel>
+                <p:panelGrid>
+                    <h:outputLabel for="solicitanteFilter" value="Solicitante: "/>
+                    <p:selectOneMenu id="solicitanteFilter"
+                                     value="#{agendamentoController.filterEntity.solicitanteIdFilter}">
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{agendamentoController.solicitantes}" var="solicitante"
+                                       itemLabel="#{solicitante.nome}" itemValue="#{solicitante.id}"/>
+                    </p:selectOneMenu>
+                </p:panelGrid>
+            </p:panel>
 
-			<p:dataTable id="agendamentoTable" value="#{agendamentoController.agendamentosCadastrados}"
-						 var="agendamento" style="width:100%" emptyMessage="Nenhuma agendamento cadastrado.">
-				<p:column headerText="Data">
-					<h:outputText value="#{agendamento.data}">
-						<f:convertDateTime pattern="dd/MM/yyyy" />
-					</h:outputText>
-				</p:column>
+            <p:dataTable id="agendamentoTable" value="#{agendamentoController.agendamentosCadastrados}"
+                         var="agendamento" style="width:100%" emptyMessage="Nenhuma agendamento cadastrado.">
+                <p:column headerText="Data">
+                    <h:outputText value="#{agendamento.data}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                </p:column>
 
-				<p:column headerText="Número">
-					<h:outputText value="#{agendamento.numero}" />
-				</p:column>
+                <p:column headerText="Número">
+                    <h:outputText value="#{agendamento.numero}"/>
+                </p:column>
 
-				<p:column headerText="Motivo">
-					<h:outputText value="#{agendamento.motivo}" />
-				</p:column>
+                <p:column headerText="Motivo">
+                    <h:outputText value="#{agendamento.motivo}"/>
+                </p:column>
 
-				<p:column headerText="Solicitante">
-					<h:outputText value="#{agendamento.nomeSolicitante}" />
-				</p:column>
+                <p:column headerText="Solicitante">
+                    <h:outputText value="#{agendamento.nomeSolicitante}"/>
+                </p:column>
 
                 <p:column headerText="Excluir">
                     <p:commandButton value="Excluir" actionListener="#{agendamentoController.excluir(agendamento.id)}"
-                                     update="@form" process="@this" icon="pi pi-pencil" />
+                                     update="@form" process="@this" icon="pi pi-pencil"/>
                 </p:column>
             </p:dataTable>
 
             <p:separator/>
 
-			<p:commandButton value="Consultar" actionListener="#{agendamentoController.consultar}" update="agendamentoTable" process="@this filterGrid" icon="pi pi-search"/>
-		</p:panel>
+            <p:commandButton value="Consultar" actionListener="#{agendamentoController.consultar}"
+                             update="agendamentoTable" process="@this filterGrid" icon="pi pi-search"/>
+        </p:panel>
 
-		<p:growl id="messages" showDetail="true" life="3000" />
-	</ui:define>
+        <p:growl id="messages" showDetail="true" life="3000"/>
+    </ui:define>
 
 </ui:composition>

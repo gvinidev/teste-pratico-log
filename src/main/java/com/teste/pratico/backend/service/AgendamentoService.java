@@ -59,7 +59,7 @@ public class AgendamentoService {
             if (agendamentosExistentes.get() + Double.parseDouble(entity.getNumero()) >= limiteAgendamentos) {
                 throw new LimiteAgendamentoException();
             }
-        } else if (Double.parseDouble(entity.getNumero()) >= limiteAgendamentos) {
+        } else if (Double.parseDouble(entity.getNumero()) > limiteAgendamentos) {
             throw new LimiteAgendamentoException();
         }
 

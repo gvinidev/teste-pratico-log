@@ -1,65 +1,87 @@
 <ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	template="template.xhtml">
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        template="template.xhtml">
 
-	<ui:define name="content">
-		<p:panel id="vagaForm" header="Cadastro de Vagas" style="width: 700px; margin-bottom: 20px;">
-			<p:panelGrid columns="2" cellpadding="5">
-				<h:outputLabel for="inicio" value="Início *: " />
-				<p:calendar id="inicio" value="#{vagasController.entity.inicio}" pattern="dd/MM/yyyy" required="true"
-							requiredMessage="Data de Início é obrigatória"
-                            mindate="today" showButtonPanel="true" />
+    <ui:define name="content">
+        <p:panel id="vagaForm" header="Cadastro de Vagas" style="width: 700px; margin-bottom: 20px;">
+            <p:panelGrid columns="2" cellpadding="5">
+                <h:outputLabel for="inicio" value="Início *: "/>
+                <p:calendar id="inicio" value="#{vagasController.entity.inicio}" pattern="dd/MM/yyyy" required="true"
+                            requiredMessage="Data de Início é obrigatória"
+                            mindate="today" showButtonPanel="true"/>
 
-				<h:outputLabel for="fim" value="Fim *: " />
-				<p:calendar id="fim" value="#{vagasController.entity.fim}" pattern="dd/MM/yyyy" required="true"
-							requiredMessage="Data de Término é obrigatória"
-                            mindate="today" showButtonPanel="true" />
+                <h:outputLabel for="fim" value="Fim *: "/>
+                <p:calendar id="fim" value="#{vagasController.entity.fim}" pattern="dd/MM/yyyy" required="true"
+                            requiredMessage="Data de Término é obrigatória"
+                            mindate="today" showButtonPanel="true"/>
 
-				<h:outputLabel for="quantidade" value="Quantidade *: " />
-				<p:inputNumber id="quantidade" value="#{vagasController.entity.quantidade}" minValue="1" required="true"
-							   requiredMessage="Quantidade de vagas é obrigatória" />
-			</p:panelGrid>
+                <h:outputLabel for="quantidade" value="Quantidade *: "/>
+                <p:inputNumber id="quantidade" value="#{vagasController.entity.quantidade}" minValue="1" required="true"
+                               requiredMessage="Quantidade de vagas é obrigatória"/>
+            </p:panelGrid>
 
-			<p:commandButton value="Cadastrar" actionListener="#{vagasController.cadastrar}" update="vagaForm messages"
-							 icon="pi pi-check" process="vagaForm" />
-		</p:panel>
+            <p:commandButton value="Cadastrar" actionListener="#{vagasController.cadastrar}" update="vagaForm messages"
+                             icon="pi pi-check" process="vagaForm"/>
+        </p:panel>
 
-		<p:separator />
+        <p:separator/>
 
-		<p:panel header="Vagas Cadastradas">
-			<p:dataTable id="vagasTable" value="#{vagasController.vagasCadastradas}" var="vaga" style="width:100%" emptyMessage="Nenhuma vaga cadastrada.">
-				<p:column headerText="Início">
-					<h:outputText value="#{vaga.inicio}">
-						<f:convertDateTime pattern="dd/MM/yyyy" />
-					</h:outputText>
-				</p:column>
+        <p:panel id="panelVagas" header="Vagas Cadastradas">
+            <p:dataTable id="vagasTable" value="#{vagasController.vagasCadastradas}" var="vaga" style="width:100%"
+                         emptyMessage="Nenhuma vaga cadastrada.">
+                <p:column headerText="Início">
+                    <h:outputText value="#{vaga.inicio}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                </p:column>
 
-				<p:column headerText="Término">
-					<h:outputText value="#{vaga.fim}">
-						<f:convertDateTime pattern="dd/MM/yyyy" />
-					</h:outputText>
-				</p:column>
+                <p:column headerText="Término">
+                    <h:outputText value="#{vaga.fim}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                </p:column>
 
-				<p:column headerText="Quantidade">
-					<h:outputText value="#{vaga.quantidade}" />
-				</p:column>
+                <p:column headerText="Quantidade">
+                    <h:outputText value="#{vaga.quantidade}"/>
+                </p:column>
+
+                <p:column headerText="Editar">
+                    <p:commandButton value="Editar Quantidade" actionListener="#{vagasController.showEditDialog(vaga)}"
+                                     update="@parent" process="@this" icon="pi pi-pencil"/>
+                </p:column>
 
                 <p:column headerText="Excluir">
                     <p:commandButton value="Excluir" actionListener="#{vagasController.excluir(vaga.id)}"
-                                     update="@form" process="@this" icon="pi pi-pencil" />
+                                     update="@form" process="@this" icon="pi pi-pencil"/>
                 </p:column>
             </p:dataTable>
 
             <p:separator/>
 
-			<p:commandButton value="Consultar" actionListener="#{vagasController.consultar}" update="vagasTable" process="@this" icon="pi pi-search"/>
-		</p:panel>
+            <p:commandButton value="Consultar" actionListener="#{vagasController.consultar}" update="vagasTable"
+                             process="@this" icon="pi pi-search"/>
 
-		<p:growl id="messages" showDetail="true" life="3000" />
-	</ui:define>
+            <p:dialog id="editDialog" header="Editar Quantidade" widgetVar="editDialog" minHeight="40" width="350" showEffect="fade" focus="btnEditar" closeOnEscape="true">
+                <p:panel>
+                    <h:outputLabel for="quantidadeEdit" value="Quantidade *: "/>
+                    <p:inputNumber id="quantidadeEdit" value="#{vagasController.entity.quantidade}" minValue="1" required="true"
+                                   requiredMessage="Quantidade de vagas é obrigatória"/>
+
+                    <f:facet name="footer">
+                        <p:commandButton type="button" value="Fechar" styleClass="ui-button-flat mr-2" style="width: 6rem" onclick="PF('editDialog').hide()"/>
+                        <p:commandButton id="btnEditar" value="Editar" style="width: 5rem"
+                                         process="editDialog" update="@form" actionListener="#{vagasController.editar}"/>
+                    </f:facet>
+                </p:panel>
+            </p:dialog>
+        </p:panel>
+
+        <p:growl id="messages" showDetail="true" life="3000"/>
+
+    </ui:define>
 
 </ui:composition>

@@ -2,6 +2,8 @@ package com.teste.pratico.backend.service;
 
 import com.teste.pratico.backend.repository.VagasRepository;
 import com.teste.pratico.model.entity.Vagas;
+import com.teste.pratico.model.exception.VagasExistenteException;
+import com.teste.pratico.model.exception.VagasIndisponiveisException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,18 @@ public class VagasService {
     private VagasRepository repository;
 
     @Transactional(rollbackOn = Throwable.class)
-    public void register(Vagas entity) {
+    public void register(Vagas entity) throws VagasExistenteException {
+        List<Vagas> vagasConflitantes = repository.findVagasByInicioAndFim(entity.getInicio(), entity.getFim());
+
+        if (!vagasConflitantes.isEmpty()) {
+            throw new VagasExistenteException();
+        }
+
+        repository.save(entity);
+    }
+
+    @Transactional(rollbackOn = Throwable.class)
+    public void update(Vagas entity) {
         repository.save(entity);
     }
 

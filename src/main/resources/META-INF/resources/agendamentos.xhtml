@@ -16,7 +16,7 @@
                             mindate="today" showButtonPanel="true"/>
 
                 <h:outputLabel for="numero" value="Número do Agendamento *: "/>
-                <p:inputNumber id="numero" value="#{agendamentoController.entity.numero}" minValue="1" required="true"
+                <p:inputNumber id="numero" value="#{agendamentoController.entity.numero}" minValue="1" required="true" decimalPlaces="0"
                                requiredMessage="Número do agendamento é obrigatório"/>
 
                 <h:outputLabel for="motivo" value="Motivo *: "/>

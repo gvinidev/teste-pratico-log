@@ -45,27 +45,23 @@ public class AgendamentoService {
         }
 
         boolean vagasDisponiveis = isVagasDisponiveis(entity.getData(), Double.parseDouble(entity.getNumero()));
-
         if (!vagasDisponiveis) {
             throw new VagasIndisponiveisException();
         }
 
         int quantidadeVagas = vagasRepository.findQuantidadeVagasDisponiveis(entity.getData());
-
         int limiteAgendamentos = limiteAgendamentos(quantidadeVagas);
 
-        Optional<Integer> agendamentosExistentes = repository.countBySolicitanteIdAndData(entity.getSolicitanteId(), entity.getData());
+        Optional<Integer> agendamentosExistentes = repository.countBySolicitanteIdAndData(
+                entity.getSolicitanteId(), entity.getData());
 
         if (agendamentosExistentes.isPresent()) {
             if (agendamentosExistentes.get() + Double.parseDouble(entity.getNumero()) >= limiteAgendamentos) {
                 throw new LimiteAgendamentoException();
             }
-        } else {
-            if (Double.parseDouble(entity.getNumero()) >= limiteAgendamentos) {
-                throw new LimiteAgendamentoException();
-            }
+        } else if (Double.parseDouble(entity.getNumero()) >= limiteAgendamentos) {
+            throw new LimiteAgendamentoException();
         }
-
 
         repository.save(entity);
     }
@@ -75,36 +71,34 @@ public class AgendamentoService {
     }
 
     public List<Agendamento> findAll(Agendamento filterEntity) {
-        String sql = "SELECT ag.*, sc.nome FROM agendamento ag INNER JOIN solicitante sc ON ag.solicitante_id = sc.id WHERE 1=1 ";
+        String sql = "SELECT ag.*, sc.nome FROM agendamento ag "
+                + "INNER JOIN solicitante sc ON ag.solicitante_id = sc.id WHERE 1=1 ";
 
-        if (null != filterEntity.getDataInicio()) {
+        if (filterEntity.getDataInicio() != null) {
             sql += " AND ag.data >= '" + formatter.format(filterEntity.getDataInicio()) + "'";
         }
 
-        if (null != filterEntity.getDataFim()) {
+        if (filterEntity.getDataFim() != null) {
             sql += " AND ag.data <= '" + formatter.format(filterEntity.getDataFim()) + "'";
         }
 
-        if (null != filterEntity.getSolicitanteIdFilter()) {
+        if (filterEntity.getSolicitanteIdFilter() != null) {
             sql += " AND ag.solicitante_id = " + filterEntity.getSolicitanteIdFilter();
         }
 
         Query query = entityManager.createNativeQuery(sql);
 
         List<Object[]> results = query.getResultList();
-
         List<Agendamento> agendamentos = new ArrayList<>();
 
-        for (Object row[] : results) {
+        for (Object[] row : results) {
             Agendamento agendamento = new Agendamento();
-
             agendamento.setId(((BigInteger) row[0]).intValue());
             agendamento.setData((Date) row[1]);
             agendamento.setNumero((String) row[2]);
             agendamento.setMotivo((String) row[3]);
             agendamento.setSolicitanteId(((BigInteger) row[4]).intValue());
             agendamento.setNomeSolicitante((String) row[5]);
-
             agendamentos.add(agendamento);
         }
 
@@ -113,8 +107,7 @@ public class AgendamentoService {
 
     public void delete(Integer id) {
         Optional<Agendamento> entityOptional = this.findById(id);
-
-        entityOptional.ifPresent(agendamento -> repository.delete(agendamento));
+        entityOptional.ifPresent(repository::delete);
     }
 
     private boolean isVagasDisponiveis(Date data, Double quantidade) {
@@ -125,9 +118,11 @@ public class AgendamentoService {
         }
 
         for (Vagas vagas : vagasDisponiveis) {
-            Optional<Integer> agendamentosExistentes = repository.numeroAgendamentoByDataBetween(vagas.getInicio(), vagas.getFim());
+            Optional<Integer> agendamentosExistentes = repository.numeroAgendamentoByDataBetween(
+                    vagas.getInicio(), vagas.getFim());
 
-            if (agendamentosExistentes.isPresent() && agendamentosExistentes.get() + quantidade > vagas.getQuantidade()) {
+            if (agendamentosExistentes.isPresent()
+                    && agendamentosExistentes.get() + quantidade > vagas.getQuantidade()) {
                 return false;
             }
         }

@@ -10,6 +10,6 @@ public class WebConfig extends SpringBootServletInitializer implements WebMvcCon
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("redirect:/index.xhtml");
+        registry.addViewController("/").setViewName("redirect:/vagas.xhtml");
     }
 }

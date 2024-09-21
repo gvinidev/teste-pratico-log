@@ -1,0 +1,59 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	template="template.xhtml">
+
+	<ui:define name="content">
+		<p:panel header="Consulta Agendamentos">
+			<p:panel id="filterGrid">
+				<p:panelGrid>
+					<h:outputLabel for="inicioFilter" value="Início: " />
+					<p:calendar id="inicioFilter" value="#{consultaAgendamentoController.filterEntity.dataInicio}" pattern="dd/MM/yyyy" required="false"
+								mindate="today" showButtonPanel="true" />
+				</p:panelGrid>
+
+				<p:panelGrid>
+					<h:outputLabel for="fimFilter" value="Fim: " />
+					<p:calendar id="fimFilter" value="#{consultaAgendamentoController.filterEntity.dataFim}" pattern="dd/MM/yyyy" required="false"
+								mindate="today" showButtonPanel="true" />
+				</p:panelGrid>
+
+				<p:panelGrid>
+					<h:outputLabel for="solicitanteFilter" value="Solicitante: " />
+					<p:selectOneMenu id="solicitanteFilter" value="#{consultaAgendamentoController.filterEntity.solicitanteIdFilter}">
+						<f:selectItem itemLabel="" itemValue=""/>
+						<f:selectItems value="#{consultaAgendamentoController.solicitantes}" var="solicitante" itemLabel="#{solicitante.nome}" itemValue="#{solicitante.id}"/>
+					</p:selectOneMenu>
+				</p:panelGrid>
+			</p:panel>
+
+			<p:dataTable id="agendamentoTable" value="#{consultaAgendamentoController.agendamentos}"
+						 var="agendamento" style="width:100%" emptyMessage="Nenhum agendamento cadastrado.">
+
+				<p:column headerText="Solicitante">
+					<h:outputText value="#{agendamento.nomeSolicitante}" />
+				</p:column>
+
+				<p:column headerText="Total Agendamentos">
+					<h:outputText value="#{agendamento.totalAgendamentos}" />
+				</p:column>
+
+				<p:column headerText="Quantidade de Vagas">
+					<h:outputText value="#{agendamento.qtdVagas}" />
+				</p:column>
+
+				<p:column headerText="Percentual">
+					<h:outputText value="#{agendamento.percentual}%" />
+				</p:column>
+            </p:dataTable>
+
+            <p:separator/>
+
+			<p:commandButton value="Consultar" actionListener="#{consultaAgendamentoController.consultar}" update="agendamentoTable" process="@this filterGrid" icon="pi pi-search"/>
+		</p:panel>
+		<p:growl id="messages" showDetail="true" life="3000" />
+	</ui:define>
+</ui:composition>

@@ -2,6 +2,7 @@ package com.teste.pratico.web.controller;
 
 import com.teste.pratico.model.entity.Agendamento;
 import com.teste.pratico.model.entity.Solicitante;
+import com.teste.pratico.model.exception.VagasIndisponiveisException;
 import com.teste.pratico.web.client.AgendamentoClient;
 import com.teste.pratico.web.client.SolicitanteClient;
 import lombok.Data;
@@ -48,8 +49,12 @@ public class AgendamentoController implements Serializable, InitializingBean {
     }
 
     public void cadastrar() {
-        client.register(entity);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Agendamento cadastrado com sucesso"));
+        try {
+            client.register(entity);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Agendamento cadastrado com sucesso"));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Warn", e.getMessage()));
+        }
     }
 
     public void consultar() {

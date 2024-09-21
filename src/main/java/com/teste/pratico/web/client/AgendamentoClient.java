@@ -1,6 +1,7 @@
 package com.teste.pratico.web.client;
 
 import com.teste.pratico.model.entity.Agendamento;
+import com.teste.pratico.model.exception.VagasIndisponiveisException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,7 +16,7 @@ public class AgendamentoClient {
 
     private static final String API_URL = "http://localhost:9292";
 
-    public void register(Agendamento entity) {
+    public void register(Agendamento entity) throws VagasIndisponiveisException {
         template.postForEntity(API_URL + "/agendamento", entity, Void.class);
     }
 

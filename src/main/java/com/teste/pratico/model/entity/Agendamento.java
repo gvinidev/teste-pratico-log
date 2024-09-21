@@ -39,7 +39,6 @@ public class Agendamento {
     private String nomeSolicitante;
 
     // Filtros
-
     @Transient
     private Date dataInicio;
 

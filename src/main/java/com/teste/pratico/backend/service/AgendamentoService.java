@@ -1,7 +1,12 @@
 package com.teste.pratico.backend.service;
 
 import com.teste.pratico.backend.repository.AgendamentoRepository;
+import com.teste.pratico.backend.repository.VagasRepository;
 import com.teste.pratico.model.entity.Agendamento;
+import com.teste.pratico.model.entity.Vagas;
+import com.teste.pratico.model.exception.AgendamentoExistenteException;
+import com.teste.pratico.model.exception.LimiteAgendamentoException;
+import com.teste.pratico.model.exception.VagasIndisponiveisException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +28,45 @@ public class AgendamentoService {
     @Autowired
     private AgendamentoRepository repository;
 
+    @Autowired
+    private VagasRepository vagasRepository;
+
     @PersistenceContext
     private EntityManager entityManager;
 
+    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     @Transactional(rollbackOn = Throwable.class)
-    public void register(Agendamento entity) {
+    public void register(Agendamento entity) throws VagasIndisponiveisException, AgendamentoExistenteException, LimiteAgendamentoException {
+        Optional<Agendamento> agendamento = repository.findBySolicitanteId(entity.getSolicitanteId());
+
+        if (agendamento.isPresent()) {
+            throw new AgendamentoExistenteException();
+        }
+
+        boolean vagasDisponiveis = isVagasDisponiveis(entity.getData(), Double.parseDouble(entity.getNumero()));
+
+        if (!vagasDisponiveis) {
+            throw new VagasIndisponiveisException();
+        }
+
+        int quantidadeVagas = vagasRepository.findQuantidadeVagasDisponiveis(entity.getData());
+
+        int limiteAgendamentos = limiteAgendamentos(quantidadeVagas);
+
+        Optional<Integer> agendamentosExistentes = repository.countBySolicitanteIdAndData(entity.getSolicitanteId(), entity.getData());
+
+        if (agendamentosExistentes.isPresent()) {
+            if (agendamentosExistentes.get() + Double.parseDouble(entity.getNumero()) >= limiteAgendamentos) {
+                throw new LimiteAgendamentoException();
+            }
+        } else {
+            if (Double.parseDouble(entity.getNumero()) >= limiteAgendamentos) {
+                throw new LimiteAgendamentoException();
+            }
+        }
+
+
         repository.save(entity);
     }
 
@@ -37,7 +76,6 @@ public class AgendamentoService {
 
     public List<Agendamento> findAll(Agendamento filterEntity) {
         String sql = "SELECT ag.*, sc.nome FROM agendamento ag INNER JOIN solicitante sc ON ag.solicitante_id = sc.id WHERE 1=1 ";
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         if (null != filterEntity.getDataInicio()) {
             sql += " AND ag.data >= '" + formatter.format(filterEntity.getDataInicio()) + "'";
@@ -77,5 +115,27 @@ public class AgendamentoService {
         Optional<Agendamento> entityOptional = this.findById(id);
 
         entityOptional.ifPresent(agendamento -> repository.delete(agendamento));
+    }
+
+    private boolean isVagasDisponiveis(Date data, Double quantidade) {
+        List<Vagas> vagasDisponiveis = vagasRepository.findVagasByPeriodo(data);
+
+        if (vagasDisponiveis.isEmpty()) {
+            return false;
+        }
+
+        for (Vagas vagas : vagasDisponiveis) {
+            Optional<Integer> agendamentosExistentes = repository.numeroAgendamentoByDataBetween(vagas.getInicio(), vagas.getFim());
+
+            if (agendamentosExistentes.isPresent() && agendamentosExistentes.get() + quantidade > vagas.getQuantidade()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public int limiteAgendamentos(int quantidadeVagas) {
+        return (int) Math.floor(quantidadeVagas * 0.25);
     }
 }

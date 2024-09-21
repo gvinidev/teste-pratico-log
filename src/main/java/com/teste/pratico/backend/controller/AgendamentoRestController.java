@@ -2,6 +2,9 @@ package com.teste.pratico.backend.controller;
 
 import com.teste.pratico.backend.service.AgendamentoService;
 import com.teste.pratico.model.entity.Agendamento;
+import com.teste.pratico.model.exception.AgendamentoExistenteException;
+import com.teste.pratico.model.exception.LimiteAgendamentoException;
+import com.teste.pratico.model.exception.VagasIndisponiveisException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +18,7 @@ public class AgendamentoRestController {
     private AgendamentoService service;
 
     @PostMapping
-    public void register(@RequestBody Agendamento entity) {
+    public void register(@RequestBody Agendamento entity) throws VagasIndisponiveisException, AgendamentoExistenteException, LimiteAgendamentoException {
         service.register(entity);
     }
 

@@ -58,7 +58,8 @@
 				</p:panelGrid>
 			</p:panel>
 
-			<p:dataTable id="agendamentoTable" value="#{agendamentoController.agendamentosCadastrados}" var="agendamento" style="width:100%" emptyMessage="Nenhuma agendamento cadastrada.">
+			<p:dataTable id="agendamentoTable" value="#{agendamentoController.agendamentosCadastrados}"
+						 var="agendamento" style="width:100%" emptyMessage="Nenhuma agendamento cadastrado.">
 				<p:column headerText="Data">
 					<h:outputText value="#{agendamento.data}">
 						<f:convertDateTime pattern="dd/MM/yyyy" />

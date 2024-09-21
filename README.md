@@ -65,7 +65,8 @@ A aplicação segue o padrão **MVC (Model-View-Controller)** e está dividida n
 	mvn install -DskipTests
 	
 3. Rode a aplicação:
-   java -jar -Dserver.port=9494 target/Teste-Pratico-Desenvolvedor-Java-0.0.2-SNAPSHOT.jar
+    java -jar target/Teste-Pratico-Desenvolvedor-Java-0.0.2-SNAPSHOT.jar -Dserver.port=9292
+
    OBS.: Também é possível subir o projeto como uma aplicação Spring diretamente via Spring Tools Suite ou IntelliJ.
    
 ## Estrutura do Projeto
